@@ -1,7 +1,7 @@
 {
-    "name": "fed/handlers",
+    "name": "fed/routers",
     "type": "ewma-module",
-    "description": "ewma handlers",
+    "description": "ewma routers",
     "authors": [
         {
             "name": "fed",
