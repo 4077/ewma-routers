@@ -15,6 +15,7 @@
         "fed/dialogs": "^0.0",
         "fed/ui": "^0.0",
         "fed/css": "^0.0",
-        "fed/exchange": "^0.0"
+        "fed/exchange": "^0.0",
+        "fed/handlers": "^0.0"
     }
 }
