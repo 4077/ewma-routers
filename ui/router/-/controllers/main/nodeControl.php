@@ -1,15 +1,19 @@
 <?php namespace ewma\routers\ui\router\controllers\main;
 
-use ewma\routers\models\Route as RouteModel;
-
 class NodeControl extends \Controller
 {
     private $route;
 
+    private $viewInstance;
+
     public function __create()
     {
-        if ($this->data('route') instanceof RouteModel) {
-            $this->route = $this->data['route'];
+        if ($route = $this->unpackModel('route')) {
+            $this->route = $route;
+
+            $this->dmap('|', 'root_node_id, enabled_ids');
+
+            $this->viewInstance = $route->id;
         } else {
             $this->lock();
         }
@@ -17,78 +21,92 @@ class NodeControl extends \Controller
 
     public function reload()
     {
-        $this->jquery()->replace($this->view());
+        $this->jquery('|' . $this->viewInstance)->replace($this->view());
     }
 
     public function view()
     {
-        $v = $this->v('|' . $this->route->id);
+        $v = $this->v('|' . $this->viewInstance);
 
-        $isRootNode = $this->data['root_node_id'] == $this->route->id;
+        $route = $this->route;
+        $routeXPack = xpack_model($route);
+
+        $isRootNode = $this->data['root_node_id'] == $route->id;
+
+        $enabledClass = $isRootNode
+            ? ($route->router->enabled ? '' : 'disabled')
+            : (in_array($route->id, $this->data['enabled_ids']) ? '' : 'disabled');
+
 
         $v->assign([
                        'ROOT_CLASS'            => $isRootNode ? 'root' : '',
-                       'LISTEN_CLASS'          => $this->route->listen ? '' : 'listen_disabled',
-                       'ENABLED_CLASS'         => in($this->route->id, $this->data['enabled_ids']) ? '' : 'disabled',
-                       'NAME'                  => $this->route->name,
+                       'LISTEN_CLASS'          => $route->listen ? '' : 'listen_disabled',
+                       'ENABLED_CLASS'         => $enabledClass,
+                       'NAME'                  => $this->c('\std\ui txt:view', [
+                           'visible'             => !$isRootNode,
+                           'path'                => '>xhr:rename|',
+                           'data'                => [
+                               'route' => $routeXPack
+                           ],
+                           'class'               => 'txt',
+                           'fitInputToClosest'   => '.name',
+                           'placeholder'         => '...',
+                           'editTriggerSelector' => $this->_selector('|' . $this->viewInstance) . " .rename.button",
+                           'content'             => $route->name
+                       ]),
+                       'RENAME_BUTTON'         => !$isRootNode
+                           ? $this->c('\std\ui tag:view', [
+                               'attrs'   => [
+                                   'class' => 'rename button',
+                                   'hover' => 'hover',
+                                   'title' => 'Переименовать'
+                               ],
+                               'content' => '<div class="icon"></div>'
+                           ])
+                           : '',
                        'DUPLICATE_BUTTON'      => $this->c('\std\ui button:view', [
                            'visible' => !$isRootNode,
-                           'path'    => 'input:duplicate',
+                           'path'    => '>xhr:duplicate|',
                            'data'    => [
-                               'context'   => $this->data('context'),
-                               'instance'  => $this->data('instance'),
-                               'route_id'  => $this->route->id,
-                               'router_id' => $this->data('router_id')
+                               'route' => $routeXPack
                            ],
                            'class'   => 'button duplicate',
-                           'title'   => 'Создать копию',
+                           'title'   => 'Дублировать',
                            'content' => '<div class="icon"></div>'
                        ]),
                        'TOGGLE_LISTEN_BUTTON'  => $this->c('\std\ui button:view', [
                            'visible' => !$isRootNode,
-                           'path'    => 'input:toggleListen',
+                           'path'    => '>xhr:toggleListen|',
                            'data'    => [
-                               'context'   => $this->data('context'),
-                               'instance'  => $this->data('instance'),
-                               'route_id'  => $this->route->id,
-                               'router_id' => $this->data('router_id')
+                               'route' => $routeXPack
                            ],
-                           'class'   => 'button toggle_listen ' . ($this->route->listen ? 'enabled' : ''),
-                           'title'   => $this->route->listen ? 'Выключить прослушивание' : 'Включить прослушивание',
+                           'class'   => 'button toggle_listen ' . ($route->listen ? 'enabled' : ''),
+                           'title'   => $route->listen ? 'Выключить прослушивание' : 'Включить прослушивание',
                            'content' => '<div class="icon"></div>'
                        ]),
                        'TOGGLE_ENABLED_BUTTON' => $this->c('\std\ui button:view', [
                            'visible' => !$isRootNode,
-                           'path'    => 'input:toggleEnabled',
+                           'path'    => '>xhr:toggleEnabled|',
                            'data'    => [
-                               'context'   => $this->data('context'),
-                               'instance'  => $this->data('instance'),
-                               'route_id'  => $this->route->id,
-                               'router_id' => $this->data('router_id')
+                               'route' => $routeXPack
                            ],
-                           'class'   => 'button toggle_enabled ' . ($this->route->enabled ? 'enabled' : ''),
-                           'title'   => $this->route->listen ? 'Выключить' : 'Включить',
+                           'class'   => 'button toggle_enabled ' . ($route->enabled ? 'enabled' : ''),
+                           'title'   => $route->enabled ? 'Выключить' : 'Включить',
                            'content' => '<div class="icon"></div>'
                        ]),
                        'CREATE_BUTTON'         => $this->c('\std\ui button:view', [
-                           'path'    => 'input:create',
+                           'path'    => '>xhr:create|',
                            'data'    => [
-                               'context'   => $this->data('context'),
-                               'instance'  => $this->data('instance'),
-                               'route_id'  => $this->route->id,
-                               'router_id' => $this->data('router_id')
+                               'route' => $routeXPack
                            ],
                            'class'   => 'button create',
                            'title'   => 'Создать',
                            'content' => '<div class="icon"></div>'
                        ]),
                        'EXCHANGE_BUTTON'       => $this->c('\std\ui button:view', [
-                           'path'    => 'input:exchange',
+                           'path'    => '>xhr:exchange|',
                            'data'    => [
-                               'context'   => $this->data('context'),
-                               'instance'  => $this->data('instance'),
-                               'route_id'  => $this->route->id,
-                               'router_id' => $this->data('router_id')
+                               'route' => $routeXPack
                            ],
                            'class'   => 'button exchange',
                            'title'   => 'Импорт/экспорт',
@@ -96,15 +114,22 @@ class NodeControl extends \Controller
                        ]),
                        'DELETE_BUTTON'         => $this->c('\std\ui button:view', [
                            'visible' => !$isRootNode,
-                           'path'    => 'input:delete',
+                           'path'    => '>xhr:delete|',
                            'data'    => [
-                               'context'   => $this->data('context'),
-                               'instance'  => $this->data('instance'),
-                               'route_id'  => $this->route->id,
-                               'router_id' => $this->data('router_id')
+                               'route' => $routeXPack
                            ],
                            'class'   => 'button delete',
                            'title'   => 'Удалить',
+                           'content' => '<div class="icon"></div>'
+                       ]),
+                       'COMPILE_BUTTON'        => $this->c('\std\ui button:view', [
+                           'visible' => $isRootNode,
+                           'path'    => '>xhr:compile|',
+                           'data'    => [
+                               'route' => $routeXPack
+                           ],
+                           'class'   => 'button compile',
+                           'title'   => 'Скомпилировать',
                            'content' => '<div class="icon"></div>'
                        ])
                    ]);
@@ -113,16 +138,15 @@ class NodeControl extends \Controller
 
         if (!$isRootNode) {
             $this->c('\std\ui button:bind', [
-                'selector' => $this->_selector('|' . $this->route->id),
-                'path'     => 'input:select',
+                'selector' => $this->_selector('|' . $this->viewInstance),
+                'path'     => '>xhr:select|',
                 'data'     => [
-                    'context'   => $this->data('context'),
-                    'instance'  => $this->data('instance'),
-                    'route_id'  => $this->route->id,
-                    'router_id' => $this->data('router_id')
+                    'route' => $routeXPack
                 ]
             ]);
         }
+
+        $this->e('ewma/routers/routes/update')->rebind(':reload|');//
 
         return $v;
     }

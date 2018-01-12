@@ -1,43 +1,43 @@
 <?php namespace ewma\routers\ui\routerSettings\controllers;
 
-use ewma\routers\models\Router as RouterModel;
-
 class Main extends \Controller
 {
-    private $context;
     private $router;
-    private $contextData;
 
     public function __create()
     {
-        if ($this->data('context') && $router = RouterModel::find($this->data('router_id'))) {
-            $this->context = $this->data['context'];
+        if ($router = $this->unpackModel('router')) {
             $this->router = $router;
-            $this->contextData = &$this->d('contexts:|' . $this->context);
 
-            if ($callbacks = $this->data('callbacks')) {
-                foreach ($callbacks as $event => $call) {
-                    $this->contextData['callbacks'][$event] = $this->_caller()->_abs($call);
-                }
-            }
+            $this->instance_($router->id);
+        } else {
+            $this->lock();
         }
+    }
+
+    public function reload()
+    {
+        $this->jquery('|')->replace($this->view());
     }
 
     public function view()
     {
-        $v = $this->v();
+        $v = $this->v('|');
+
+        $router = $this->router;
+        $routerXPack = xpack_model($router);
 
         $v->assign([
-                       'NAME_TXT' => $this->c('\std\ui txt:view', [
-                           'path'              => 'input:nameUpdate',
+                       'DATA_CAT' => $this->c('\std\ui txt:view', [
+                           'path'              => '>xhr:updateDataCat',
                            'data'              => [
-                               'context'   => $this->context,
-                               'router_id' => $this->router->id
+                               'router' => $routerXPack
                            ],
-                           'class'             => 'name_txt',
-                           'fitInputToClosest' => '.value',
-                           'content'           => $this->router->name
-                       ]),
+                           'class'             => 'txt',
+                           'fitInputToClosest' => '.data_cat',
+                           'title'             => 'data_cat',
+                           'content'           => $router->data_cat
+                       ])
                    ]);
 
         $this->css();

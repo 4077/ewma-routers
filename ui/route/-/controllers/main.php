@@ -1,28 +1,15 @@
 <?php namespace ewma\routers\ui\route\controllers;
 
-use ewma\routers\models\Route as RouteModel;
-use ewma\routers\Routes;
-
 class Main extends \Controller
 {
-    private $context;
-    private $instance;
     private $route;
-    private $contextData;
 
     public function __create()
     {
-        if ($this->data('context') && $route = RouteModel::find($this->data('route_id'))) {
-            $this->context = $this->data['context'];
-            $this->instance = $route->id;
+        if ($route = $this->unpackModel('route')) {
             $this->route = $route;
-            $this->contextData = &$this->d('contexts:|' . $this->context);
 
-            if ($callbacks = $this->data('callbacks')) {
-                foreach ($callbacks as $event => $call) {
-                    $this->contextData['callbacks'][$event] = $this->_caller()->_abs($call);
-                }
-            }
+            $this->instance_($route->id);
         } else {
             $this->lock();
         }
@@ -30,172 +17,82 @@ class Main extends \Controller
 
     public function reload()
     {
-        $this->jquery(":|" . $this->instance)->replace($this->view());
+        $this->jquery('|')->replace($this->view());
     }
 
     public function view()
     {
-        $v = $this->v('|' . $this->instance);
+        $v = $this->v('|');
+
+        $route = $this->route;
+        $routeXPack = xpack_model($route);
 
         $v->assign([
-                       'COMPILE_BUTTON'                     => $this->c('\std\ui button:view', [
-                           'path'    => 'input:compile',
-                           'data'    => [
-                               'context'  => $this->context,
-                               'route_id' => $this->route->id
-                           ],
-                           'class'   => 'compile_button',
-                           'content' => 'Скомпилировать'
+                       'HREF'                  => abs_url(routers()->routes->getFullPattern($route)),
+                       'WRAPPER_SELECTOR'      => $this->c('>wrapperSelector:view', [
+                           'route' => $route
                        ]),
-                       'NAME_TXT'                           => $this->c('\std\ui txt:view', [
-                           'path'              => 'input:nameUpdate',
+                       'TOGGLE_LISTEN_BUTTON'  => $this->c('\std\ui button:view', [
+                           'path'    => '>xhr:toggleListen|',
+                           'data'    => [
+                               'route' => $routeXPack
+                           ],
+                           'class'   => 'button toggle_listen ' . ($route->listen ? 'enabled' : ''),
+                           'title'   => $route->listen ? 'Выключить прослушивание' : 'Включить прослушивание',
+                           'content' => '<div class="icon"></div>'
+                       ]),
+                       'TOGGLE_ENABLED_BUTTON' => $this->c('\std\ui button:view', [
+                           'path'    => '>xhr:toggleEnabled|',
+                           'data'    => [
+                               'route' => $routeXPack
+                           ],
+                           'class'   => 'button toggle_enabled ' . ($route->enabled ? 'enabled' : ''),
+                           'title'   => $route->enabled ? 'Выключить' : 'Включить',
+                           'content' => '<div class="icon"></div>'
+                       ]),
+                       'PATTERN'               => $this->c('\std\ui txt:view', [
+                           'path'              => '>xhr:updatePattern',
                            'data'              => [
-                               'context'  => $this->context,
-                               'route_id' => $this->route->id
+                               'route' => $routeXPack
                            ],
-                           'class'             => 'name_txt',
-                           'fitInputToClosest' => '.value',
-                           'content'           => $this->route->name
+                           'class'             => 'txt',
+                           'fitInputToClosest' => '.pattern',
+                           'content'           => routers()->routes->getFullPattern($route),
+                           'contentOnInit'     => $route->pattern
                        ]),
-                       'BASE_ROUTE_PATTERN'                 => $this->getBaseRoutePattern(),
-                       'PATTERN_TXT'                        => $this->c('\std\ui txt:view', [
-                           'path'              => 'input:patternUpdate',
+                       'DATA_SOURCE'           => $this->c('\std\ui txt:view', [
+                           'path'              => '>xhr:updateDataSource',
                            'data'              => [
-                               'context'  => $this->context,
-                               'route_id' => $this->route->id
+                               'route' => $routeXPack
                            ],
-                           'class'             => 'pattern_txt',
-                           'fitInputToClosest' => '.value',
-                           'content'           => $this->route->pattern
-                       ]),
-                       'TARGET_TYPE_METHOD_BUTTON'          => $this->c('\std\ui button:view', [
-                           'path'    => 'input:setTargetType:method',
-                           'data'    => [
-                               'context'  => $this->context,
-                               'route_id' => $this->route->id
-                           ],
-                           'class'   => 'target_type_button method ' . ($this->route->target_type == 'METHOD' ? 'selected' : ''),
-                           'content' => 'вызов метода'
-                       ]),
-                       'TARGET_TYPE_HANDLERS_OUTPUT_BUTTON' => $this->c('\std\ui button:view', [
-                           'path'    => 'input:setTargetType:handlers_output',
-                           'data'    => [
-                               'context'  => $this->context,
-                               'route_id' => $this->route->id
-                           ],
-                           'class'   => 'target_type_button handlers_output ' . ($this->route->target_type == 'HANDLERS_OUTPUT' ? 'selected' : ''),
-                           'content' => 'обработчик'
-                       ]),
-                       'EWMA_HTML_WRAPPER_BUTTON'           => $this->c('\std\ui button:view', [
-                           'path'    => 'input:setResponseWrapper',
-                           'data'    => [
-                               'context'  => $this->context,
-                               'route_id' => $this->route->id,
-                               'wrapper'  => 'ewma_html'
-                           ],
-                           'class'   => 'wrapper_button ewma_html ' . ($this->route->response_wrapper == 'EWMA_HTML' ? 'pressed' : ''),
-                           'content' => 'html'
-                       ]),
-                       'NO_WRAPPER_BUTTON'                  => $this->c('\std\ui button:view', [
-                           'path'    => 'input:setResponseWrapper',
-                           'data'    => [
-                               'context'  => $this->context,
-                               'route_id' => $this->route->id,
-                               'wrapper'  => 'none'
-                           ],
-                           'class'   => 'wrapper_button none ' . ($this->route->response_wrapper == 'NONE' ? 'pressed' : ''),
-                           'content' => 'none'
-                       ]),
+                           'class'             => 'txt',
+                           'placeholder'       => '...',
+                           'fitInputToClosest' => '.data_source',
+                           'content'           => $route->data_source
+                       ])
                    ]);
 
-        if ($this->route->target_type == 'METHOD') {
-            $v->assign('method', [
-                'PATH_TXT'   => $this->c('\std\ui txt:view', [
-                    'path'              => 'input:targetMethodPathUpdate',
-                    'data'              => [
-                        'context'  => $this->context,
-                        'route_id' => $this->route->id
+        if ($route->wrapper_enabled && $wrapper = $route->wrapper) {
+            if ($cpHandler = wrappers()->getHandler($wrapper, 'cp')) {
+                $v->assign('CP', handlers()->render($cpHandler, [
+                    'route'       => [
+                        'model' => $route
                     ],
-                    'class'             => 'target_method_path_txt',
-                    'fitInputToClosest' => '.value',
-                    'content'           => $this->route->target_method_path
-                ]),
-                'DATA_JEDIT' => $this->c('\std\ui\data~:view|' . $this->_nodeId() . '/' . $this->route->id, [
-                    'read_call'  => $this->_abs(':readTargetMethodData', [
-                        'context'  => $this->context,
-                        'route_id' => $this->route->id
-                    ]),
-                    'write_call' => $this->_abs(':writeTargetMethodData', [
-                        'context'  => $this->context,
-                        'route_id' => $this->route->id
-                    ])
-                ])
-            ]);
+                    'data_source' => $route->data_source
+                ]));
+            }
+        } else {
+            $v->assign([
+                           'HANDLER' => $this->c('>handler:view', [
+                               'route' => $route
+                           ])
+                       ]);
         }
 
-        if ($this->route->target_type == 'HANDLERS_OUTPUT') { // todo OUTPUT_ASSIGNMENT
-            $v->assign('handlers_output', [
-                'ASSIGNMENTS' => $this->getHandlersOutputView()
-            ]);
-        }
+        $this->css(':\css\std~, \jquery\ui icons');
 
-        $this->css()->import('< common, \css\std~');
+        $this->e('ewma/routers/routes/update')->rebind(':reload');
 
         return $v;
-    }
-
-    private function getHandlersOutputView()
-    {
-        if ($this->route->target_type == 'HANDLERS_OUTPUT') {
-            if ($output = Routes::getHandlersOutput($this->route->id)) {
-                return $this->c('\ewma\handlers\ui\assignments~:outputView', [
-                    'output_id'    => $output->id,
-                    'context'      => 'route/' . $this->route->id,
-                    'context_data' => [
-                        'editable'  => true,
-                        'callbacks' => [
-                            'set_obsolete' => $this->_abs([
-                                                              'callbacks:setObsolete',
-                                                              [
-                                                                  'route_id' => $this->route->id
-                                                              ]
-                                                          ])
-                        ]
-                    ]
-                ]);
-            }
-        }
-    }
-
-    private function getBaseRoutePattern()
-    {
-        $route = $this->route;
-
-        $segments = [];
-        while ($route = $route->parent) {
-            if ($route->pattern) {
-                $segments[] = $route->pattern;
-            }
-        }
-
-        $baseRoute = '';
-        if ($segments) {
-            $segments = array_reverse($segments);
-            $baseRoute = implode('/', $segments) . '/';
-        }
-
-        return $baseRoute;
-    }
-
-    public function readTargetMethodData()
-    {
-        return Routes::getTargetMethodData($this->data('route_id'));
-    }
-
-    public function writeTargetMethodData()
-    {
-        if ($route = Routes::setTargetMethodData($this->data('route_id'), $this->data('data'))) {
-            $this->c('callbacks:setObsolete', false, 'route_id');
-        }
     }
 }

@@ -4,25 +4,39 @@ class Main extends \Controller
 {
     public function compile()
     {
-        $this->c('compiler:compile');
+        return routers()->compileAll();
     }
 
     public function compileRouter()
     {
         if ($router = \ewma\routers\models\Router::find($this->data('router_id'))) {
-            $this->c('compiler/router')->compile($router);
+            return routers()->compile($router);
         }
     }
 
     public function compileRoute()
     {
         if ($route = \ewma\routers\models\Route::find($this->data('route_id'))) {
-            while (!$router = $route->router and $route->parent) {
-                $route = $route->parent;
-            }
+            return routers()->routes->compile($route);
+        }
+    }
 
-            if (isset($router)) {
-                $this->c('compiler/router')->compile($route->router);
+    public function create()
+    {
+        return routers()->create();
+    }
+
+    public function createRoute()
+    {
+        if ($routerId = $this->data('router_id')) {
+            if ($router = \ewma\routers\models\Router::find($routerId)) {
+                return routers()->createRoute($router);
+            }
+        }
+
+        if ($routeId = $this->data('route_id')) {
+            if ($route = \ewma\routers\models\Route::find($routeId)) {
+                return routers()->routes->create($route);
             }
         }
     }

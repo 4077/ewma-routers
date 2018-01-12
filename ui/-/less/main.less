@@ -1,44 +1,39 @@
 // head {
-@import "../../../../../css/std/-/less/main.less";
-
 @__nodeId__: ~"ewma_routers_ui__main";
 // }
 
 .@{__nodeId__} {
+    display: flex;
+    align-items: flex-start;
 
-    .__block {
-        float: left;
-        padding: 10px;
-        margin: 5px;
-        box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-    }
+    > .router_cp {
+        position: relative;
+        border-radius: 5px;
+        padding-bottom: 5px;
+        min-width: 250px;
+        box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.15), 1px 1px 4px rgba(0, 0, 0, 0.3);
 
-    > .routers {
-        .__block;
-    }
+        .ui-resizable-handle {
+            width: 16px;
+            right: -16px;
 
-    > .router {
-        .__block;
-
-        .compile_button {
-            .__button;
-            .blue;
-            .small;
-
-            float: right;
-            margin-bottom: 10px;
+            &:hover {
+                //background-color: rgba(0, 0, 0, 0.3);
+            }
         }
 
-        > .settings {
-
+        > .router_selector {
+            padding: 5px;
+            background-color: #F0F0F0;
+            border-radius: 5px 5px 0 0;
         }
 
         > .router {
-
+            margin-top: -1px;
         }
     }
 
     > .route {
-        .__block;
+        margin-left: 20px;
     }
 }

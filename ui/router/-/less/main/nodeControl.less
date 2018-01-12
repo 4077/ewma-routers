@@ -1,156 +1,195 @@
 // head {
-@import "../../../../../../../jquery/ui/-/less/icons.less";
+@import "../../../../../../../modules-vendor/fed/jquery/ui/-/less/icons.less";
 
 @__nodeId__: ~"ewma_routers_ui_router__main_nodeControl";
 // }
 
-@buttonSize: 28px;
-
 .@{__nodeId__} {
+    @buttonSize: 28px;
 
-    & > .content {
-        cursor: pointer;
+    cursor: pointer;
+    position: relative;
+    //background-color: #D5D5D5;
+    min-height: @buttonSize;
+
+    .name {
+        color: #000000;
+
+        .txt {
+            padding: 7px 10px;
+        }
+    }
+
+    input {
         position: relative;
-        min-height: @buttonSize;
-        //background-color: #D5D5D5;
+        z-index: 3;
+        background-color: #F7F7F7;
+        box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3) inset;
+    }
+
+    .buttons {
+        display: none;
+        position: absolute;
+        right: 0;
+        z-index: 2;
+
+        .button {
+            cursor: pointer;
+            float: left;
+            width: @buttonSize;
+            height: @buttonSize;
+            background-color: #F3F3F3;
+
+            .icon {
+                float: left;
+                margin: (@buttonSize - 16px) / 2;
+                width: 16px;
+                height: 16px;
+                background: url("../images/icons_454545.png") 16px 16px;
+            }
+
+            &.hover {
+                background-color: #E0E0E0;
+            }
+
+            &.rename {
+
+                .icon {
+                    .ui-icon-pencil;
+                }
+            }
+
+            &.toggle_enabled {
+
+                .icon {
+                    .ui-icon-radio-off;
+                }
+
+                &.enabled {
+
+                    .icon {
+                        .ui-icon-bullet;
+                    }
+                }
+            }
+
+            &.toggle_listen {
+
+                .icon {
+                    background-image: url("../images/icons_bbbbbb.png");
+                    .ui-icon-signal-diag;
+                }
+
+                &.enabled {
+
+                    .icon {
+                        background-image: url("../images/icons_454545.png");
+                    }
+                }
+            }
+
+            &.create {
+
+                .icon {
+                    .ui-icon-plus;
+                }
+            }
+
+            &.exchange {
+
+                .icon {
+                    .ui-icon-transfer-e-w;
+                }
+            }
+
+            &.duplicate {
+
+                .icon {
+                    .ui-icon-copy;
+                }
+            }
+
+            &.delete {
+
+                .icon {
+                    .ui-icon-trash;
+                }
+            }
+
+            &.compile {
+
+                .icon {
+                    .ui-icon-arrowthickstop-1-s;
+                }
+            }
+        }
+    }
+
+    &.listen_disabled {
 
         .name {
-            padding: 7px 10px;
-            color: #000000;
+            color: #008ed4;
+            //font-style: italic;
+        }
+    }
+
+    &.disabled {
+
+        .name {
+            color: #b5b5b5;
         }
 
         &.listen_disabled {
 
             .name {
-                color: #CE3E3E;
+                color: #a0cbf3;
             }
         }
+    }
 
-        &.disabled {
+    &.root {
+        cursor: default;
+        background-color: #404040;
+        color: #FFFFFF;
 
-            .name {
-                color: #BEBEBE;
-            }
-
-            &.listen_disabled {
-
-                .name {
-                    color: #D8989A;
-                }
-            }
-        }
-
-        .buttons {
-            display: none;
-            position: absolute;
-            right: 0;
-
-            .button {
-                cursor: pointer;
-                float: left;
-                width: @buttonSize;
-                height: @buttonSize;
-                background-color: #F3F3F3;
-
-                .icon {
-                    float: left;
-                    margin: (@buttonSize - 16px) / 2;
-                    width: 16px;
-                    height: 16px;
-                    background: url("../images/icons_454545.png") 16px 16px;
-                }
-
-                &.hover {
-                    background-color: #E0E0E0;
-                }
-
-                &.toggle_enabled {
-
-                    .icon {
-                        .ui-icon-radio-off;
-                    }
-
-                    &.enabled {
-
-                        .icon {
-                            .ui-icon-bullet;
-                        }
-                    }
-                }
-
-                &.toggle_listen {
-
-                    .icon {
-                        background-image: url("../images/icons_bbbbbb.png");
-                        .ui-icon-signal-diag;
-                    }
-
-                    &.enabled {
-
-                        .icon {
-                            background-image: url("../images/icons_454545.png");
-                        }
-                    }
-                }
-
-                &.create {
-
-                    .icon {
-                        .ui-icon-plus;
-                    }
-                }
-
-                &.exchange {
-
-                    .icon {
-                        .ui-icon-transfer-e-w;
-                    }
-                }
-
-                &.duplicate {
-
-                    .icon {
-                        .ui-icon-copy;
-                    }
-                }
-
-                &.delete {
-
-                    .icon {
-                        .ui-icon-trash;
-                    }
-                }
-            }
-        }
-
-        &.root {
-            cursor: default;
+        .button {
             background-color: #404040;
-            color: #FFFFFF;
 
-            .button {
-                background-color: #404040;
+            .icon {
+                background-image: url("../images/icons_ffffff.png");
+            }
 
-                .icon {
-                    background: url("../images/icons_ffffff.png");
-                }
-
-                &.hover {
-                    background-color: #5D5D5D;
-                }
+            &.hover {
+                background-color: #5D5D5D;
             }
         }
 
         &.hover {
-            background-color: #FAFAFA;
+            background-color: #404040;
+        }
 
-            &.root {
-                background-color: #404040;
+        &.disabled {
+            background-color: #923245;
+
+            .button {
+                background-color: #923245;
+
+                &.hover {
+                    background-color: #9C3B4A;
+                }
             }
 
-            .buttons {
-                display: block;
+            &.hover {
+                background-color: #923245;
             }
+        }
+    }
+
+    &.hover {
+        background-color: #F3F3F3;
+
+        .buttons {
+            display: block;
         }
     }
 }

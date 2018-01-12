@@ -1,0 +1,35 @@
+// head {
+@import "../../../../../../modules-vendor/fed/css/std/-/less/main.less";
+@import "../../../../../../modules-vendor/fed/jquery/ui/-/less/icons.less";
+
+@__nodeId__: ~"ewma_routers_ui__main_routerSelector";
+// }
+
+.@{__nodeId__} {
+    display: flex;
+
+    > .select {
+        flex-grow: 1;
+
+        select {
+            width: 100%;
+            padding: 5px;
+        }
+    }
+
+    > .cp {
+        flex-grow: 0;
+        margin-left: 5px;
+
+        .routers_dialog_button {
+            .__button;
+            .small;
+            padding: 6px 8px 5px;
+
+            .icon {
+                .jquery_ui__icon(16px);
+                .ui-icon-note;
+            }
+        }
+    }
+}

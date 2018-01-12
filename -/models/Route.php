@@ -9,6 +9,11 @@ class Route extends \Model
         return $this->belongsTo(Router::class);
     }
 
+    public function wrapper()
+    {
+        return $this->belongsTo(\ewma\wrappers\models\Wrapper::class);
+    }
+
     public function nested()
     {
         return $this->hasMany(self::class, 'parent_id');
@@ -17,6 +22,11 @@ class Route extends \Model
     public function parent()
     {
         return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    public function handler()
+    {
+        return $this->morphOne(\ewma\handlers\models\Handler::class, 'target');
     }
 }
 

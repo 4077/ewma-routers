@@ -4,17 +4,8 @@ class Xhr extends \Controller
 {
     public $allow = self::XHR;
 
-    public function updateRoutersWidth()
+    public function updateRouterCpWidth()
     {
-        $s = &$this->s('~');
-
-        $s['routers_width'] = $this->data('width');
-    }
-
-    public function updateRouterWidth()
-    {
-        $s = &$this->s('~');
-
-        $s['router_width'] = $this->data('width');
+        $this->s('~:router_cp_width', $this->data('width'), RA);
     }
 }

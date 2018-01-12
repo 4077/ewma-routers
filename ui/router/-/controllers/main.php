@@ -1,28 +1,19 @@
 <?php namespace ewma\routers\ui\router\controllers;
 
-use ewma\routers\models\Router as RouterModel;
-use ewma\routers\Routers;
-
 class Main extends \Controller
 {
-    private $context;
-    private $instance;
     private $router;
-    private $contextData;
+
+    private $viewInstance;
 
     public function __create()
     {
-        if ($this->data('context') && $router = RouterModel::find($this->data('router_id'))) {
-            $this->context = $this->data['context'];
-            $this->instance = $this->data['router_id'];
+        if ($router = $this->unpackModel('router')) {
             $this->router = $router;
-            $this->contextData = &$this->d('contexts:|' . $this->context);
 
-            if ($callbacks = $this->data('callbacks')) {
-                foreach ($callbacks as $event => $call) {
-                    $this->contextData['callbacks'][$event] = $this->_caller()->_abs($call);
-                }
-            }
+            $this->dmap('|', 'callbacks');
+
+            $this->viewInstance = $router->id;
         } else {
             $this->lock();
         }
@@ -30,75 +21,79 @@ class Main extends \Controller
 
     public function reload()
     {
-        if ($this->instance) {
-            $this->jquery(":|" . $this->instance)->replace($this->view());
-        }
+        $this->jquery('|' . $this->viewInstance)->replace($this->view());
     }
 
     public function view()
     {
-        if ($this->instance) {
-            $v = $this->v('|' . $this->instance);
+        $v = $this->v('|' . $this->viewInstance);
 
-            $v->assign([
-                           'ROUTES_TREE' => $this->routesTreeView($this->router)
-                       ]);
+        $v->assign([
+                       'TREE' => $this->routesTreeView($this->router)
+                   ]);
 
-            $this->css(':\jquery\ui icons, \css\std~');
-            $this->widget(':|' . $this->router->id, [
-                'routerId' => $this->router->id,
-                'paths'    => [
-                    'reload' => $this->_p('input:reload')
-                ]
-            ]);
+        $this->css(':\jquery\ui icons, \css\std~');
 
-            return $v;
-        }
+        $this->widget(':|' . $this->viewInstance, [
+            'routerId' => $this->router->id,
+            'paths'    => [
+                'reload' => $this->_p('>xhr:reload') ///
+            ]
+        ]);
+
+        $this->e('ewma/routers/update')->rebind(':reload|');
+
+        return $v;
     }
 
     private function routesTreeView($router)
     {
-        $rootRoute = Routers::getRootRoute($router);
+        $rootRoute = routers()->getRootRoute($router);
 
         $this->renderTreeInfo($rootRoute);
 
-        return $this->c('\std\ui\tree~:view|' . path($this->_nodeId(), $this->context, $router->id), [
+        return $this->c('\std\ui\tree~:view|' . $this->_nodeInstance(), [
             'default'          => [
-                'query_builder' => '>app:treeQueryBuilder',
-                'value_field'   => 'name'
+                'value_field' => 'name',
+                'movable'     => true,
+                'sortable'    => true,
+                'expand'      => false
             ],
             'root_node_id'     => $rootRoute->id,
-            'expand'           => false,
             'selected_node_id' => $this->data('selected_route_id'),
-            'movable'          => true,
-            'sortable'         => true,
-            'node_control'     => $this->_abs('>nodeControl:view', [
-                'enabled_ids'  => $this->enabledIds,
+            'node_control'     => $this->_abs('>nodeControl:view|', [
                 'route'        => '%model',
-                'context'      => $this->context,
-                'router_id'    => $router->id,
+                'enabled_ids'  => $this->enabledIds,
                 'root_node_id' => $rootRoute->id
-            ])
+            ]),
+            'query_builder'    => $this->_abs('>app:treeQueryBuilder', [
+                'router_id' => $rootRoute->router_id
+            ]),
+            'callbacks'        => [
+                'move' => $this->_abs('>app:onMove', [
+                    'route' => '%source_model'
+                ])
+            ]
         ]);
     }
 
     private $enabledIds = [];
 
-    private function renderTreeInfo($rootNode)
+    private function renderTreeInfo(\ewma\routers\models\Route $rootRoute)
     {
-        $tree = \ewma\Data\Tree::get($rootNode);
+        $tree = \ewma\Data\Tree::get($rootRoute);
 
-        $this->getTreeInfoRecursion($tree, $rootNode);
+        $this->getTreeInfoRecursion($tree, $rootRoute);
     }
 
     private $level = 0;
 
-    private function getTreeInfoRecursion(\ewma\Data\Tree $tree, $node)
+    private function getTreeInfoRecursion(\ewma\Data\Tree $tree, \ewma\routers\models\Route $route)
     {
-        if ($node->enabled) {
-            merge($this->enabledIds, $node->id);
+        if ($route->enabled) {
+            merge($this->enabledIds, $route->id);
 
-            $subnodes = $tree->getSubnodes($node->id);
+            $subnodes = $tree->getSubnodes($route->id);
 
             foreach ($subnodes as $subnode) {
                 $this->level++;

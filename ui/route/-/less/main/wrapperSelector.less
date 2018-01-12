@@ -1,0 +1,71 @@
+// head {
+@__nodeId__: ~"ewma_routers_ui_route__main_typeSelector";
+// }
+
+.@{__nodeId__} {
+
+    .toggle_enabled_button {
+        @buttonSize: 28px;
+
+        .__button;
+        .small;
+
+        margin: 0;
+        padding: 6px 8px 5px;
+        background-color: #F3F3F3;
+
+        border-radius: 3px 0 0 3px;
+        border: 1px solid #006184;
+        .__gradient(#166C91, #006184);
+        color: #1EDFEA;
+
+        .icon {
+            .jquery_ui__icon(16px);
+            background: url("../images/icons_ffffff.png") 16px 16px;
+        }
+
+        &.hover {
+            background-color: #E0E0E0;
+            .__gradient(lighten(#166C91, 5%), lighten(#006184, 5%));
+            border: 1px solid lighten(#006184, 5%);
+        }
+
+        .icon {
+            .ui-icon-radio-off;
+        }
+
+        &.enabled {
+
+            .icon {
+                .ui-icon-bullet;
+            }
+        }
+
+        &:active {
+            position: relative;
+            left: 1px;
+            top: 1px;
+        }
+    }
+
+    .selector_dialog_button {
+        float: left;
+        cursor: pointer;
+        border-radius: 0 3px 3px 0;
+        padding: 7px 12px;
+        border: 1px solid #006184;
+        .__gradient(#166C91, #006184);
+        color: #1EDFEA;
+
+        &:hover {
+            .__gradient(lighten(#166C91, 5%), lighten(#006184, 5%));
+            border: 1px solid lighten(#006184, 5%);
+        }
+
+        &:active {
+            position: relative;
+            left: 1px;
+            top: 1px;
+        }
+    }
+}

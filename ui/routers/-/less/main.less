@@ -1,26 +1,177 @@
 // head {
-@import "../../../../../../css/std/-/less/main.less";
+@import "../../../../../../modules-vendor/fed/css/std/-/less/main.less";
+@import "../../../../../../modules-vendor/fed/jquery/ui/-/less/icons.less";
 
 @__nodeId__: ~"ewma_routers_ui_routers__main";
 // }
 
 .@{__nodeId__} {
 
-    .compile_button {
-        .__button;
-        .blue;
-        .small;
+    .routers {
 
-        float: right;
-        margin-bottom: 10px;
+        .router {
+            @buttonSize: 28px;
+
+            cursor: pointer;
+            position: relative;
+            min-height: @buttonSize;
+
+            .name {
+                color: #000000;
+
+                .txt {
+                    padding: 7px 10px;
+                }
+            }
+
+            input {
+                position: relative;
+                z-index: 3;
+                background-color: #F7F7F7;
+                box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3) inset;
+            }
+
+            &.listen_disabled {
+
+                .name {
+                    color: #EF3E5D;
+                    font-style: italic;
+                }
+            }
+
+            &.disabled {
+
+                .name {
+                    color: #BEBEBE;
+                }
+
+                &.listen_disabled {
+
+                    .name {
+                        color: #EFA6B7;
+                        font-style: italic;
+                    }
+                }
+            }
+
+            .buttons {
+                display: none;
+                position: absolute;
+                right: 0;
+                z-index: 2;
+
+                .button {
+                    cursor: pointer;
+                    float: left;
+                    width: @buttonSize;
+                    height: @buttonSize;
+                    background-color: #F3F3F3;
+
+                    .icon {
+                        float: left;
+                        margin: (@buttonSize - 16px) / 2;
+                        width: 16px;
+                        height: 16px;
+                        background: url("images/icons_454545.png") 16px 16px;
+                    }
+
+                    &.hover {
+                        background-color: #E0E0E0;
+                    }
+
+                    &.rename {
+
+                        .icon {
+                            .ui-icon-pencil;
+                        }
+                    }
+
+                    &.toggle_enabled {
+
+                        .icon {
+                            .ui-icon-radio-off;
+                        }
+
+                        &.enabled {
+
+                            .icon {
+                                .ui-icon-bullet;
+                            }
+                        }
+                    }
+
+                    &.toggle_listen {
+
+                        .icon {
+                            background-image: url("images/icons_bbbbbb.png");
+                            .ui-icon-signal-diag;
+                        }
+
+                        &.enabled {
+
+                            .icon {
+                                background-image: url("images/icons_454545.png");
+                            }
+                        }
+                    }
+
+                    &.create {
+
+                        .icon {
+                            .ui-icon-plus;
+                        }
+                    }
+
+                    &.exchange {
+
+                        .icon {
+                            .ui-icon-transfer-e-w;
+                        }
+                    }
+
+                    &.duplicate {
+
+                        .icon {
+                            .ui-icon-copy;
+                        }
+                    }
+
+                    &.delete {
+
+                        .icon {
+                            .ui-icon-trash;
+                        }
+                    }
+                }
+            }
+
+            &.disabled {
+                color: #A5A5A5;
+            }
+
+            &.hover {
+                background-color: #F3F3F3;
+
+                .buttons {
+                    display: block;
+                }
+            }
+        }
     }
 
-    > .button {
-        cursor: pointer;
+    .buttons {
+        display: flex;
 
-        &.create {
+        .create_button {
             .__button;
             .green;
+            .small;
+            margin-top: 10px;
+        }
+
+        .compile_button {
+            .__button;
+            .blue;
             .small;
             margin-top: 10px;
         }

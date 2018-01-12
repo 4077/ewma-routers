@@ -1,22 +1,19 @@
 <div class="{__NODE_ID__}">
 
-    <div class="routers" style="width: {ROUTERS_WIDTH}px;">
-        {ROUTERS}
+    <div class="router_cp" style="width: {ROUTER_CP_WIDTH}px">
+
+        <div class="router_selector">
+            {ROUTER_SELECTOR}
+        </div>
+
+        <div class="router">
+            {ROUTER}
+        </div>
+
     </div>
 
-    <!-- router -->
-    <div class="router" style="width: {WIDTH}px;">
-        {COMPILE_BUTTON}
-        <div class="cb"></div>
-        <div class="settings">{SETTINGS}</div>
-        <div class="router">{ROUTER}</div>
-    </div>
-    <!-- / -->
-
-    <!-- route -->
     <div class="route">
-        {CONTENT}
+        {ROUTE}
     </div>
-    <!-- / -->
 
 </div>
