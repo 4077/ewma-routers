@@ -48,7 +48,7 @@ class Svc extends \ewma\service\Service
 
         $this->compileEnabledRouters();
 
-        return 'routers compiled: ' . count($routers);
+        return count($routers);
     }
 
     public function compile(\ewma\routers\models\Router $router)

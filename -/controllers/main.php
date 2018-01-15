@@ -4,7 +4,7 @@ class Main extends \Controller
 {
     public function compile()
     {
-        return routers()->compileAll();
+        return 'routers compiled: ' . routers()->compileAll();
     }
 
     public function compileRouter()
