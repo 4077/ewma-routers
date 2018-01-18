@@ -36,8 +36,12 @@ class Renderer
 
         if ($resolvedRoute instanceof \ewma\Route\ResolvedRoute) {
             $response = handlers()->render($routeCache['handler_source'], [
-                'route_string' => $routeString,
-                'data_source'  => $routeCache['data_source']
+                'route' => [
+                    'base'        => $resolvedRoute->baseRoute,
+                    'tail'        => $resolvedRoute->routeTail,
+                    'pack'        => \ewma\routers\models\Route::class . ':' . $routeCache['id'],
+                    'data_source' => $routeCache['data_source']
+                ]
             ]);
 
             if (null !== $response && $routeCache['response_wrapper'] == 'HTML') {
