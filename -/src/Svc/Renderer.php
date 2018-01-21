@@ -39,6 +39,7 @@ class Renderer
                 'route' => [
                     'base'        => $resolvedRoute->baseRoute,
                     'tail'        => $resolvedRoute->routeTail,
+                    'full'        => path($resolvedRoute->baseRoute, $resolvedRoute->routeTail),
                     'pack'        => \ewma\routers\models\Route::class . ':' . $routeCache['id'],
                     'data_source' => $routeCache['data_source']
                 ]
