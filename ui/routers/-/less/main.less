@@ -5,175 +5,83 @@
 @__nodeId__: ~"ewma_routers_ui_routers__main";
 // }
 
+.h100() {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex-grow: 1;
+}
+
 .@{__nodeId__} {
+    .h100;
 
-    .routers {
-
-        .router {
-            @buttonSize: 28px;
-
-            cursor: pointer;
-            position: relative;
-            min-height: @buttonSize;
-
-            .name {
-                color: #000000;
-
-                .txt {
-                    padding: 7px 10px;
-                }
-            }
-
-            input {
-                position: relative;
-                z-index: 3;
-                background-color: #F7F7F7;
-                box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3) inset;
-            }
-
-            &.listen_disabled {
-
-                .name {
-                    color: #EF3E5D;
-                    font-style: italic;
-                }
-            }
-
-            &.disabled {
-
-                .name {
-                    color: #BEBEBE;
-                }
-
-                &.listen_disabled {
-
-                    .name {
-                        color: #EFA6B7;
-                        font-style: italic;
-                    }
-                }
-            }
-
-            .buttons {
-                display: none;
-                position: absolute;
-                right: 0;
-                z-index: 2;
-
-                .button {
-                    cursor: pointer;
-                    float: left;
-                    width: @buttonSize;
-                    height: @buttonSize;
-                    background-color: #F3F3F3;
-
-                    .icon {
-                        float: left;
-                        margin: (@buttonSize - 16px) / 2;
-                        width: 16px;
-                        height: 16px;
-                        background: url("images/icons_454545.png") 16px 16px;
-                    }
-
-                    &.hover {
-                        background-color: #E0E0E0;
-                    }
-
-                    &.rename {
-
-                        .icon {
-                            .ui-icon-pencil;
-                        }
-                    }
-
-                    &.toggle_enabled {
-
-                        .icon {
-                            .ui-icon-radio-off;
-                        }
-
-                        &.enabled {
-
-                            .icon {
-                                .ui-icon-bullet;
-                            }
-                        }
-                    }
-
-                    &.toggle_listen {
-
-                        .icon {
-                            background-image: url("images/icons_bbbbbb.png");
-                            .ui-icon-signal-diag;
-                        }
-
-                        &.enabled {
-
-                            .icon {
-                                background-image: url("images/icons_454545.png");
-                            }
-                        }
-                    }
-
-                    &.create {
-
-                        .icon {
-                            .ui-icon-plus;
-                        }
-                    }
-
-                    &.exchange {
-
-                        .icon {
-                            .ui-icon-transfer-e-w;
-                        }
-                    }
-
-                    &.duplicate {
-
-                        .icon {
-                            .ui-icon-copy;
-                        }
-                    }
-
-                    &.delete {
-
-                        .icon {
-                            .ui-icon-trash;
-                        }
-                    }
-                }
-            }
-
-            &.disabled {
-                color: #A5A5A5;
-            }
-
-            &.hover {
-                background-color: #F3F3F3;
-
-                .buttons {
-                    display: block;
-                }
-            }
-        }
-    }
-
-    .buttons {
+    > .cp {
         display: flex;
+        justify-content: space-between;
+        background-color: #424242;
+        padding: 5px;
+
+        .button() {
+            background: linear-gradient(#464646, #2D2D2D);
+            border: 1px solid #353535;
+            color: #AFAFAF;
+        }
 
         .create_button {
             .__button;
             .green;
             .small;
-            margin-top: 10px;
+            .button;
         }
 
         .compile_button {
             .__button;
             .blue;
             .small;
-            margin-top: 10px;
+            .button;
+        }
+
+        min-height: 25px; // todo
+    }
+
+    > .routers {
+        .h100;
+
+        max-height: 100%;
+        overflow: auto;
+
+        > .router {
+
+            &.selected {
+                cursor: default;
+
+                > div {
+                    background-color: #345280;
+
+                    .name {
+                        color: #FFFFFF;
+                    }
+
+                    .host {
+                        color: #FFFFFF;
+                    }
+
+                    .buttons {
+
+                        .button {
+                            background-color: #345280;
+
+                            .icon {
+                                background-image: url("images/icons_ffffff.png");
+                            }
+
+                            &.hover {
+                                background-color: #20324E;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

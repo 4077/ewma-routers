@@ -9,7 +9,10 @@ class Main extends \Controller
         $this->s(false, [
             'selected_router_id'             => false,
             'selected_route_id_by_router_id' => false,
-            'router_cp_width'                => 250
+            'routers_width'                  => 300,
+            'routers_scroll'                 => [0, 0],
+            'router_width'                   => 300,
+            'router_scroll'                  => [0, 0]
         ]);
     }
 
@@ -23,26 +26,35 @@ class Main extends \Controller
         $v = $this->v();
         $s = $this->s();
 
-        $v->assign('ROUTER_SELECTOR', $this->c('>routerSelector:view', [
-            'selected_router_id' => $s['selected_router_id']
-        ]));
+        $v->assign([
+                       'ROUTERS_WIDTH' => $s['routers_width'],
+                       'ROUTER_WIDTH'  => $s['router_width'],
+                   ]);
 
         if ($router = $this->getSelectedRouter()) {
             $selectedRouteId = ap($s, 'selected_route_id_by_router_id/' . $router->id);
 
             $v->assign([
-                           'ROUTER_CP_WIDTH' => $s['router_cp_width'],
-                           'ROUTER'          => $this->c('router~:view|' . $this->_nodeId(), [
+                           'ROUTERS' => $this->c('routers~:view|' . $this->_nodeId(), [
+                               'selected_router_id' => $router->id,
+                               'callbacks'          => [
+                                   'select' => $this->_abs(':onRouterSelect')
+                               ]
+                           ]),
+                           'ROUTER'  => $this->c('router~:view|' . $this->_nodeId(), [
+                               'router' => $router
+                           ]),
+                           'ROUTES'  => $this->c('routes~:view|' . $this->_nodeId(), [
                                'router'            => $router,
                                'selected_route_id' => $selectedRouteId,
                                'callbacks'         => [
-                                   'selectRoute' => $this->_abs(':routeSelect')
+                                   'select' => $this->_abs(':onRouteSelect')
                                ]
-                           ])
+                           ]),
                        ]);
 
             if ($selectedRouteId && $route = \ewma\routers\models\Route::find($selectedRouteId)) {
-                $v->assign('ROUTE', $this->c('route~:view', [
+                $v->assign('ROUTE', $this->c('route~:view|' . $this->_nodeId(), [
                     'route' => $route
                 ]));
             }
@@ -58,7 +70,23 @@ class Main extends \Controller
 
         $this->c('\std\ui\dialogs~:addContainer:ewma/routers');
 
+        $this->widget(':|', [
+            'paths'     => [
+                'updateViewport' => $this->_p('>xhr:updateViewport')
+            ],
+            'viewports' => [
+                'routers' => [
+                    'scroll' => $s['routers_scroll']
+                ],
+                'router'  => [
+                    'scroll' => $s['router_scroll']
+                ]
+            ]
+        ]);
+
         $this->css();
+
+        $this->app->html->setFavicon(abs_url('-/ewma/favicons/dev_routers.png'));
 
         $this->e('ewma/routers/create')->rebind(':reload');
         $this->e('ewma/routers/delete')->rebind(':reload');
@@ -96,7 +124,16 @@ class Main extends \Controller
         return $this->selectedRouter;
     }
 
-    public function routeSelect()
+    public function onRouterSelect()
+    {
+        $router = $this->data['router'];
+
+        $this->s(':selected_router_id', $router->id, RA);
+
+        $this->reload();
+    }
+
+    public function onRouteSelect()
     {
         $route = $this->data['route'];
 

@@ -4,8 +4,19 @@ class Xhr extends \Controller
 {
     public $allow = self::XHR;
 
-    public function updateRouterCpWidth()
+    public function updateViewport()
     {
-        $this->s('~:router_cp_width', $this->data('width'), RA);
+        $viewport = $this->data('viewport');
+
+        if (in($viewport, 'routers, router')) {
+            if ($scroll = $this->data('scroll')) {
+                $left = $scroll['left'] ?? 0;
+                $top = $scroll['top'] ?? 0;
+
+                $this->s('~', [
+                    $viewport . '_scroll' => [$left, $top]
+                ], RA);
+            }
+        }
     }
 }

@@ -1,4 +1,4 @@
-<?php namespace ewma\routers\ui\router\controllers\main\nodeControl;
+<?php namespace ewma\routers\ui\routes\controllers\main\nodeControl;
 
 class Xhr extends \Controller
 {
@@ -99,7 +99,7 @@ class Xhr extends \Controller
     public function select()
     {
         if ($route = $this->unpackModel('route')) {
-            $this->c('~app:performCallback:selectRoute|', [
+            $this->c('~app:performCallback:select|', [
                 'route' => $route
             ]);
         }
@@ -114,7 +114,7 @@ class Xhr extends \Controller
                 'default'             => [
                     'pluginOptions/width' => 500
                 ],
-                'path'                => '\std\data\exchange~:view|ewma/routers',
+                'path'                => '\std\data\exchange~:view|ewma/routers/routes',
                 'data'                => [
                     'target_name' => $routeNameBranch,
                     'import_call' => $this->_abs('<<app:import', ['route' => pack_model($route)]),

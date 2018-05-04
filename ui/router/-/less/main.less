@@ -1,18 +1,52 @@
 // head {
-@import "../../../../../../modules-vendor/fed/jquery/ui/-/less/icons.less";
-@import "../../../../../../modules-vendor/fed/css/std/-/less/main.less";
-
-@__nodeId__: ~"ewma_routers_ui_router__main";
+@__nodeId__: ~"ewma_routers_ui_routerSettings__main";
 // }
 
 .@{__nodeId__} {
 
-    .compile_button {
-        .__button;
-        .blue;
-        .small;
+    .hosts {
+        position: relative;
+        background-color: #585858;
+        color: #dadada;
 
-        float: right;
-        margin-bottom: 10px;
+        min-height: 35px; // todo
+
+        .txt {
+            padding: 10px;
+            line-height: 15px; // todo
+        }
+
+        textarea {
+            box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3) inset, 1px 1px 15px rgba(0, 0, 0, 0.3);
+            background-color: #420044;
+            color: #ff3dc2;
+            z-index: 3;
+            padding: 10px;
+            min-height: 150px;
+        }
+    }
+
+    .data_cat {
+        position: relative;
+        cursor: pointer;
+        float: left;
+        margin-right: 2px;
+        background-color: #808080;
+        color: #F7E3CF;
+        font-size: 13px;
+
+        .txt {
+            padding: 8px 12px;
+        }
+
+        > input {
+            background-color: darken(#808080, 5%);
+            color: #F7E3CF;
+            box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3) inset;
+        }
+
+        &:hover {
+            background-color: darken(#808080, 5%);
+        }
     }
 }

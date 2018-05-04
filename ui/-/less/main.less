@@ -2,38 +2,32 @@
 @__nodeId__: ~"ewma_routers_ui__main";
 // }
 
+.h100() {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex-grow: 1;
+}
+
 .@{__nodeId__} {
     display: flex;
-    align-items: flex-start;
+    flex-grow: 1;
 
-    > .router_cp {
-        position: relative;
-        border-radius: 5px;
-        padding-bottom: 5px;
-        min-width: 250px;
-        box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.15), 1px 1px 4px rgba(0, 0, 0, 0.3);
+    > .routers {
+        min-width: 300px;
+        overflow: auto;
 
-        .ui-resizable-handle {
-            width: 16px;
-            right: -16px;
+        //.h100;
+    }
 
-            &:hover {
-                //background-color: rgba(0, 0, 0, 0.3);
-            }
-        }
-
-        > .router_selector {
-            padding: 5px;
-            background-color: #F0F0F0;
-            border-radius: 5px 5px 0 0;
-        }
-
-        > .router {
-            margin-top: -1px;
-        }
+    > .router {
+        overflow: auto;
     }
 
     > .route {
-        margin-left: 20px;
+        overflow: auto;
+        padding: 0 5px;
+
+        .h100;
     }
 }

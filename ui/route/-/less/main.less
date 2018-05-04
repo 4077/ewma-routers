@@ -7,11 +7,19 @@
 
 .@{__nodeId__} {
 
-    .cp_1 {
+    > .row {
+        margin: 0 0 10px 0;
+    }
 
-        .row {
-            margin: 10px 0;
-        }
+    //
+    //
+    //
+
+    > .row > .handler {
+        float: left; // todo
+    }
+
+    > .row > .buttons {
 
         .button {
             @buttonSize: 28px;
@@ -67,91 +75,91 @@
                 }
             }
         }
+    }
 
-        .wrapper_selector {
-            float: left;
-            margin-left: 10px;
+    .wrapper_selector {
+        float: left;
+        margin-left: 10px;
+    }
+
+    .type_selector {
+        float: left;
+        margin-left: 10px;
+    }
+
+    .data_source {
+        position: relative;
+        cursor: pointer;
+        float: left;
+        margin-left: 10px;
+        background-color: #E5F3FF;
+        color: #0D7B92;
+        border-radius: 3px;
+
+        .txt {
+            padding: 8px 12px;
         }
 
-        .type_selector {
-            float: left;
-            margin-left: 10px;
-        }
-
-        .data_source {
-            position: relative;
-            cursor: pointer;
-            float: left;
-            margin-left: 10px;
-            background-color: #E5F3FF;
+        > input {
+            background-color: darken(#E5F3FF, 5%);
             color: #0D7B92;
             border-radius: 3px;
-
-            .txt {
-                padding: 8px 12px;
-            }
-
-            > input {
-                background-color: darken(#E5F3FF, 5%);
-                color: #0D7B92;
-                border-radius: 3px;
-                box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3) inset;
-            }
-
-            &:hover {
-                background-color: darken(#E5F3FF, 5%);
-            }
+            box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3) inset;
         }
 
-        .pattern {
-            position: relative;
-            cursor: pointer;
-            float: left;
-            background-color: #E9E8D4;
+        &:hover {
+            background-color: darken(#E5F3FF, 5%);
+        }
+    }
+
+    .pattern {
+        position: relative;
+        cursor: pointer;
+        float: left;
+        background-color: #E9E8D4;
+        color: #794022;
+        font-size: 13px;
+
+        .txt {
+            padding: 8px 12px;
+        }
+
+        > input {
+            background-color: lighten(#E9E8D4, 5%);
             color: #794022;
-            font-size: 13px;
-
-            .txt {
-                padding: 8px 12px;
-            }
-
-            > input {
-                background-color: lighten(#E9E8D4, 5%);
-                color: #794022;
-                box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3) inset;
-            }
-
-            &:hover {
-                background-color: lighten(#E9E8D4, 5%);
-            }
+            box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3) inset;
         }
 
-        a.link {
-            @buttonSize: 28px;
+        &:hover {
+            background-color: lighten(#E9E8D4, 5%);
+        }
+    }
 
-            display: block;
-            float: left;
-            padding: 7px 8px 6px;
+    a.link {
+        @buttonSize: 28px;
+
+        display: block;
+        float: left;
+        padding: 7px 8px 6px;
+
+        .icon {
+            .jquery_ui__icon(16px);
+            background-image: url("images/icons_bbbbbb.png");
+            .ui-icon-newwin;
+        }
+
+        &:hover {
+            background-color: darken(#E9E8D4, 5%);
 
             .icon {
-                .jquery_ui__icon(16px);
-                background-image: url("images/icons_bbbbbb.png");
-                .ui-icon-newwin;
+                background-image: url("images/icons_454545.png");
             }
+        }
 
-            &:hover {
-                background-color: darken(#E9E8D4, 5%);
-
-                .icon {
-                    background-image: url("images/icons_454545.png");
-                }
-            }
-
-            &:active {
-                position: relative;
-                left: 1px;
-                top: 1px;
-            }
+        &:active {
+            position: relative;
+            left: 1px;
+            top: 1px;
         }
     }
 }

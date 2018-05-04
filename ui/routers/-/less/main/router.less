@@ -1,0 +1,166 @@
+.@{__nodeId__} {
+    @bg_color: #F0F0F0;
+
+    cursor: pointer;
+    margin-bottom: 1px;
+    position: relative;
+    background-color: @bg_color;
+
+    .name {
+        font-weight: bold;
+        position: relative;
+
+        .txt {
+            padding: 7px 10px;
+        }
+
+        input {
+            box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3) inset;
+            background-color: #FFFFFF;
+            z-index: 3;
+        }
+    }
+
+    .hosts {
+        padding: 0px 0 10px 0;
+
+        .host {
+            font-size: 10px;
+            padding: 2px 10px;
+            color: #909090;
+        }
+    }
+
+    .id {
+        display: none;
+        padding: 10px 0;
+        color: #000000;
+    }
+
+    .buttons {
+        display: none;
+        position: absolute;
+        right: 0;
+        z-index: 2;
+
+        @buttonSize: 28px;
+
+        .button {
+            cursor: pointer;
+            float: left;
+            width: @buttonSize;
+            height: @buttonSize;
+            background-color: @bg_color;
+
+            .icon {
+                float: left;
+                margin: (@buttonSize - 16px) / 2;
+                width: 16px;
+                height: 16px;
+                background: url("../images/icons_454545.png") 16px 16px;
+            }
+
+            &.hover {
+                background-color: @bg_color - #111111;
+            }
+        }
+
+        .button {
+
+            &.rename {
+
+                .icon {
+                    .ui-icon-pencil;
+                }
+            }
+
+            &.toggle_enabled {
+
+                .icon {
+                    .ui-icon-radio-off;
+                }
+
+                &.enabled {
+
+                    .icon {
+                        .ui-icon-bullet;
+                    }
+                }
+            }
+
+            &.toggle_listen {
+
+                .icon {
+                    background-image: url("../images/icons_bbbbbb.png");
+                    .ui-icon-signal-diag;
+                }
+
+                &.enabled {
+
+                    .icon {
+                        background-image: url("../images/icons_454545.png");
+                    }
+                }
+            }
+
+            &.create {
+
+                .icon {
+                    .ui-icon-plus;
+                }
+            }
+
+            &.exchange {
+
+                .icon {
+                    .ui-icon-transfer-e-w;
+                }
+            }
+
+            &.duplicate {
+
+                .icon {
+                    .ui-icon-copy;
+                }
+            }
+
+            &.delete {
+
+                .icon {
+                    .ui-icon-trash;
+                }
+            }
+        }
+    }
+
+    &.disabled {
+
+        .name {
+            color: #B5B5B5;
+        }
+
+        .host {
+            color: #D2D2D2;
+        }
+    }
+
+    &:hover {
+        background-color: #E0E0E0;
+
+        .id {
+            display: block;
+        }
+
+        .buttons {
+            display: block;
+
+            .button {
+                background-color: #E0E0E0;
+
+                &.hover {
+                    background-color: #C7C7C7;
+                }
+            }
+        }
+    }
+}

@@ -4,9 +4,17 @@ class Renderer
 {
     public function render($routeString)
     {
+        $host = app()->host;
+
         if ($enabledRouters = aread(abs_path('cache/routers/enabled_routers.php'))) {
-            foreach ($enabledRouters as $routerId) {
-                if (null !== $response = $this->getRouterResponse($routeString, $routerId)) {
+            foreach ($enabledRouters as $routerData) {
+                if ($routerData['hosts']) {
+                    if (!in_array($host, $routerData['hosts'])) {
+                        continue;
+                    }
+                }
+
+                if (null !== $response = $this->getRouterResponse($routeString, $routerData['id'])) {
                     return $response;
                 }
             }
@@ -35,7 +43,9 @@ class Renderer
         $resolvedRoute = $virtualRouter->route($routeCache['pattern']);
 
         if ($resolvedRoute instanceof \ewma\Route\ResolvedRoute) {
-            $response = handlers()->render($routeCache['handler_source'], [
+            $data = $resolvedRoute->data();
+
+            ra($data, [
                 'route' => [
                     'base'        => $resolvedRoute->baseRoute,
                     'tail'        => $resolvedRoute->routeTail,
@@ -44,6 +54,8 @@ class Renderer
                     'data_source' => $routeCache['data_source']
                 ]
             ]);
+
+            $response = handlers()->render($routeCache['handler_source'], $data);
 
             if (null !== $response && $routeCache['response_wrapper'] == 'HTML') {
                 return app()->html->setContent($response)->view();

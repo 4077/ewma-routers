@@ -1,15 +1,16 @@
 <div class="{__NODE_ID__}">
 
-    <div class="router_cp" style="width: {ROUTER_CP_WIDTH}px">
+    <div class="routers" style="width: {ROUTERS_WIDTH}px">
+        {ROUTERS}
+    </div>
 
-        <div class="router_selector">
-            {ROUTER_SELECTOR}
-        </div>
-
-        <div class="router">
+    <div class="router" style="width: {ROUTER_WIDTH}px">
+        <div class="cp">
             {ROUTER}
         </div>
-
+        <div class="routes">
+            {ROUTES}
+        </div>
     </div>
 
     <div class="route">

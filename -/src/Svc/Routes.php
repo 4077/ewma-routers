@@ -32,8 +32,8 @@ class Routes extends \ewma\service\Service////////////
 
         $this->import($newRoute, $this->export($route), true);
 
-        $handler = handlers()->duplicate(routers()->routes->getHandler($route));
-        $newRoute->handler()->save($handler);
+//        $handler = handlers()->duplicate(routers()->routes->getHandler($route));
+//        $newRoute->handler()->save($handler);
 
         return $newRoute;
     }
@@ -76,16 +76,30 @@ class Routes extends \ewma\service\Service////////////
         return $wrapperData['response_handler'];
     }
 
+    private $exportOutput;
+
     public function export(\ewma\routers\models\Route $route)
     {
         $treeBuilder = \ewma\routers\models\Route::where('router_id', $route->router_id)->orderBy('position');
 
         $tree = \ewma\Data\Tree::get($treeBuilder);
 
-        return [
-            'route_id' => $route->id,
-            'routes'   => $tree->getFlattenData($route->id),
-        ];
+        $this->exportOutput['route_id'] = $route->id;
+        $this->exportOutput['routes'] = $tree->getFlattenData($route->id);;
+
+        $this->exportRecursion($tree, $route);
+
+        return $this->exportOutput;
+    }
+
+    private function exportRecursion(\ewma\Data\Tree $tree, \ewma\routers\models\Route $route)
+    {
+        $this->exportOutput['handlers'][$route->id] = handlers()->export(routers()->routes->getHandler($route));
+
+        $subroutes = $tree->getSubnodes($route->id);
+        foreach ($subroutes as $subroute) {
+            $this->exportRecursion($tree, $subroute);
+        }
     }
 
     public function import(\ewma\routers\models\Route $target, $data, $skipFirstLevel = false)
@@ -108,7 +122,19 @@ class Routes extends \ewma\service\Service////////////
 
             $newRouteData['router_id'] = $target->router_id;
 
+            unset($newRouteData['handler']);
+
             $newRoute = $target->nested()->create($newRouteData);
+        }
+
+        if (!empty($data['handlers'][$routeId])) {
+            $handlerData = $data['handlers'][$routeId];
+
+            $handlerData['handler']['target_id'] = $newRoute->id;
+
+            $handler = handlers()->import($handlerData);
+
+
         }
 
         if (!empty($data['routes']['ids_by_parent'][$routeId])) {

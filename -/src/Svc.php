@@ -62,7 +62,16 @@ class Svc extends \ewma\service\Service
     {
         $routers = \ewma\routers\models\Router::where('enabled', true)->orderBy('position')->get();
 
-        awrite(abs_path('cache/routers/enabled_routers.php'), table_column($routers, 'id'));
+        $enabledRouters = [];
+
+        foreach ($routers as $router) {
+            $enabledRouters[] = [
+                'id'    => $router->id,
+                'hosts' => $router->hosts ? l2a($router->hosts) : false
+            ];
+        }
+
+        awrite(abs_path('cache/routers/enabled_routers.php'), $enabledRouters);
     }
 
     public function render($routeString = null)
@@ -87,14 +96,16 @@ class Svc extends \ewma\service\Service
 
     public function duplicate(\ewma\routers\models\Router $router)
     {
-        $newRouter = \ewma\routers\models\Router::create($router->toArray());
+//        $newRouter = \ewma\routers\models\Router::create($router->toArray());
+//
+//        $routerRootRoute = $this->getRootRoute($router);
+//        $newRouterRootRoute = $this->getRootRoute($newRouter);
+//
+//        $this->routes->import($newRouterRootRoute, $this->routes->export($routerRootRoute), true);
+//
+//        return $newRouter;
 
-        $routerRootRoute = $this->getRootRoute($router);
-        $newRouterRootRoute = $this->getRootRoute($newRouter);
-
-        $this->routes->import($newRouterRootRoute, $this->routes->export($routerRootRoute), true);
-
-        return $newRouter;
+        return $this->import($this->export($router));
     }
 
     public function delete(\ewma\routers\models\Router $router)
@@ -108,6 +119,25 @@ class Svc extends \ewma\service\Service
     public function createRoute(\ewma\routers\models\Router $router)
     {
         return $this->routes->create($this->getRootRoute($router));
+    }
+
+    public function export(\ewma\routers\models\Router $router)
+    {
+        return [
+            'router' => $router->toArray(),
+            'routes' => $this->routes->export($this->getRootRoute($router))
+        ];
+    }
+
+    public function import($data)
+    {
+        $newRouter = \ewma\routers\models\Router::create($data['router']);
+
+        $newRouterRootRoute = $this->getRootRoute($newRouter);
+
+        $this->routes->import($newRouterRootRoute, $data['routes'], true);
+
+        return $newRouter;
     }
 
     /**

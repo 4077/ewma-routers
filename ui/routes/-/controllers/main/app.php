@@ -1,4 +1,4 @@
-<?php namespace ewma\routers\ui\router\controllers\main;
+<?php namespace ewma\routers\ui\routes\controllers\main;
 
 class App extends \Controller
 {
