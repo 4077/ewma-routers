@@ -166,8 +166,8 @@ class Routes extends \ewma\service\Service////////////
 
     public function getResponseHandler(\ewma\routers\models\Route $route)
     {
-        if ($wrapper = $route->wrapper) {
-            $handler = wrappers()->getHandler($wrapper, 'response');
+        if ($component = $route->component) {
+            $handler = components()->getHandler($component, 'response');
         } else {
             $handler = $this->getHandler($route);
         }

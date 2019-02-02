@@ -8,7 +8,7 @@ class WrapperSelector extends \Controller
             $v = $this->v();
 
             if ($wrapper = $route->wrapper) {
-                $content = wrappers()->getFullName($wrapper);
+                $content = components()->getFullName($wrapper);
             } else {
                 $content = '...';
             }
@@ -32,7 +32,7 @@ class WrapperSelector extends \Controller
                            ])
                        ]);
 
-            $this->css(':\css\std~, \jquery\ui icons');
+            $this->css(':\css\std~, \js\jquery\ui icons');
 
             return $v;
         }

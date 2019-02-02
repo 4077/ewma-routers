@@ -1,6 +1,6 @@
 // head {
-var __nodeId__ = "ewma_routers_ui_router__main";
-var __nodeNs__ = "ewma_routers_ui_router";
+var __nodeId__ = "ewma_routers_ui_routes__main";
+var __nodeNs__ = "ewma_routers_ui_routes";
 // }
 
 (function (__nodeNs__, __nodeId__) {

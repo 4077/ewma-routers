@@ -9,9 +9,9 @@ class Route extends \Model
         return $this->belongsTo(Router::class);
     }
 
-    public function wrapper()
+    public function component()
     {
-        return $this->belongsTo(\ewma\wrappers\models\Wrapper::class);
+        return $this->belongsTo(\ewma\components\models\Component::class);
     }
 
     public function nested()

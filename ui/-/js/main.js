@@ -1,3 +1,8 @@
+// head {
+var __nodeId__ = "ewma_routers_ui__main";
+var __nodeNs__ = "ewma_routers_ui";
+// }
+
 (function (__nodeNs__, __nodeId__) {
     $.widget(__nodeNs__ + "." + __nodeId__, {
         options: {},

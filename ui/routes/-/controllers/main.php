@@ -32,7 +32,7 @@ class Main extends \Controller
                        'TREE' => $this->routesTreeView($this->router)
                    ]);
 
-        $this->css(':\jquery\ui icons, \css\std~');
+        $this->css(':\js\jquery\ui icons, \css\std~');
 
         $this->widget(':|' . $this->viewInstance, [
             'routerId' => $this->router->id,

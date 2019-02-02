@@ -72,8 +72,8 @@ class Main extends \Controller
                        ])
                    ]);
 
-        if ($route->wrapper_enabled && $wrapper = $route->wrapper) {
-            if ($cpHandler = wrappers()->getHandler($wrapper, 'cp')) {
+        if ($route->wrapper_enabled && $component = $route->component) {
+            if ($cpHandler = components()->getHandler($component, 'cp')) {
                 $v->assign('CP', handlers()->render($cpHandler, [
                     'route'       => [
                         'model' => $route
@@ -89,7 +89,7 @@ class Main extends \Controller
                        ]);
         }
 
-        $this->css(':\css\std~, \jquery\ui icons');
+        $this->css(':\css\std~, \js\jquery\ui icons');
 
         $this->e('ewma/routers/routes/update')->rebind(':reload');
 

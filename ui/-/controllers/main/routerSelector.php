@@ -26,7 +26,7 @@ class RouterSelector extends \Controller
                        ])
                    ]);
 
-        $this->css(':\css\std~, \jquery\ui icons');
+        $this->css(':\css\std~, \js\jquery\ui icons');
 
         $this->e('ewma/routers/routes/update/name')->rebind(':reload', [
             'selected_router_id' => $this->data('selected_router_id')
