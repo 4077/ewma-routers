@@ -12,7 +12,7 @@ class Route extends \Schema
             $table->increments('id');
             $table->integer('parent_id')->default(0);
             $table->integer('router_id')->default(0);
-            $table->integer('wrapper_id')->default(0); // todo del|change to component_id
+            $table->integer('wrapper_id')->nullable(); // todo del|change to component_id
             $table->boolean('wrapper_enabled')->default(false); // todo del|change to component_enabled
             $table->integer('position')->default(0);
             $table->boolean('enabled')->default(true);
