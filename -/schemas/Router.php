@@ -1,6 +1,6 @@
 <?php namespace ewma\routers\schemas;
 
-class Session extends \Schema
+class Router extends \Schema
 {
     public $table = 'ewma_routers';
 
