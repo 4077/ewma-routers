@@ -11,8 +11,6 @@ class App extends \Controller
 
     public function import()
     {
-        if ($router = $this->unpackModel('router')) {
-            routers()->import($this->data('data'));
-        }
+        routers()->import($this->data('data'));
     }
 }
